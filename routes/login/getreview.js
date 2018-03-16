@@ -36,13 +36,16 @@ router.get('/', function(req, res){
 
      function(connection, callback){
        //let selectquery = "select * from review where review_id in (select review_id from review where user_id = ? order by review_id desc ) ";
-       let selectquery = "select * from review where user_id =? order by review_id desc limit 2 offset 2";
+      // let selectquery = "select * from review where user_id =? order by review_id desc limit 2 offset ?";
+       //let selectquery = "select * from review r join subject s on r.subject_id = s.subject_id order by review_id desc limit 2 offset ?"
+      let selectquery = "select * from review r join subject s on r.subject_id = s.subject_id where review_id in (select review_id from review where user_id = ?) order by review_id desc limit 2 offset ?";
         console.log(req.decoded);
        var id = req.decoded.user_id;
 
+
     console.log(id);
 
-       connection.query(selectquery, [id, req.headers['offset']], (err, rows) =>
+       connection.query(selectquery, [id, Number(req.headers['offset'])], (err, rows) =>
        {
          if(err)
          {
@@ -55,7 +58,7 @@ router.get('/', function(req, res){
          }
 
          else if(rows.length > 0) {
-
+ console.log(rows);
            var obj = {
              reviews:[]
            };
@@ -66,7 +69,8 @@ router.get('/', function(req, res){
              obj.reviews.push(
                {
                  comment: rows[i].comment,
-                 review_id: rows[i].review_id
+                 review_id: rows[i].review_id,
+                 subject: rows[i].contents
                }
 
              );
