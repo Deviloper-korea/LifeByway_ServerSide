@@ -30,7 +30,7 @@ router.get('/', function(req, res){
       else {
         callback(null, connection);
       }
-    })
+    });
   },
 
      function(connection, callback){
@@ -39,9 +39,9 @@ router.get('/', function(req, res){
        var id = req.decoded.user_id;
     console.log(req.decoded);
     console.log(id);
-    console.log(req.headers['date']);
+    console.log(req.headers.date);
 
-       connection.query(checkquery, [req.headers['date'], id], (err, rows) =>
+       connection.query(checkquery, [req.headers.date, id], (err, rows) =>
        {
              console.log(rows);
              console.log(rows.length);
@@ -88,7 +88,7 @@ router.get('/', function(req, res){
          }
      });
    }
- ]
+ ];
 
    async.waterfall(tasks, function(err){
      if(err){

@@ -51,7 +51,7 @@ router.post('/', function(req, res, next) {
     },
 
     (connection, callback) => {
-      let selectquery = "select subject_id, contents from subject where date = ?;";
+      let selectquery = "select * from subject where date = ?;";
       connection.query(selectquery,[req.body.date],(err,subject) =>{
         if(subject[0] == null){
           res.status(501).send({
@@ -81,17 +81,17 @@ router.post('/', function(req, res, next) {
     },
 
     (connection, subject, count, callback) => {
-      var info = new Array(5);
+      var info = new Array(10);
       var num = new Array(count[0].cnt);
-      let selectquery = "select user.nickname, review.comment from user inner join review on user.user_id = review.user_id where subject_id = ?;";
+      let selectquery = "select user.id, user.nickname, user.imgLink, user.level, review.comment, review.date from user inner join review on user.user_id = review.user_id where subject_id = ?;";
       connection.query(selectquery,[subject[0].subject_id],(err,rows) =>{
-        if(count[0].cnt < 5){ //1~5 보내줌
+        if(count[0].cnt < 10){ //1~10 보내줌
           for(let i=0; i < count[0].cnt; i++){
             info[i] = rows[i];
           }
           callback(null, connection, subject, info, rows, num);
-        }else{//랜덤으로 5개의 숫자 뽑아서 보내줌
-          for(let i=0; i < 5; i++){
+        }else{//랜덤으로 10개의 숫자 뽑아서 보내줌
+          for(let i=0; i < 10; i++){
             num[i] = Math.floor(Math.random() * (count[0].cnt-1));
             //getRandomInt(0, count.cnt-1);
 
@@ -105,7 +105,7 @@ router.post('/', function(req, res, next) {
 
           }
 
-          for(let i = 0; i < 5; i++){
+          for(let i = 0; i < 10; i++){
             info[i] = rows[num[i]];
           }
           callback(null, connection, subject, info, rows, num);
@@ -117,8 +117,8 @@ router.post('/', function(req, res, next) {
       res.status(201).send({
         stat:"success",
         data:{
-          "contents": subject[0].contents,
-          "array" : info
+          "subject": subject[0],
+          "comments" : info
         }
       });
       connection.release();

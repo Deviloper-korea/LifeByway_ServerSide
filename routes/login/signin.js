@@ -6,7 +6,7 @@ const jwt = require('jsonwebtoken');
 const mysql = require('mysql');
 const async = require('async');
 
-const secret = require('../../config/secret.js')
+const secret = require('../../config/secret.js');
 
 
 router.post('/', function(req, res, next){
@@ -27,7 +27,7 @@ router.post('/', function(req, res, next){
         console.log('connection success');
             let query = "select * from user where id = ? and password = ?";
 
-            connection.query(query, [req.body.id, req.body.pwd], (err, rows) =>{
+            connection.query(query, [req.get('id'), req.get('password')], (err, rows) =>{
 
               if(err){
                 console.log('select fail');
@@ -43,7 +43,9 @@ router.post('/', function(req, res, next){
                 var token = jwt.sign(
                              {
                                id: rows[0].id,
-                               nickname: rows[0].nickname
+                               nickname: rows[0].nickname,
+                               user_id: rows[0].user_id
+
                              },
                              secret,
                              {

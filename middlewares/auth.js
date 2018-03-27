@@ -2,12 +2,12 @@ const jwt = require('jsonwebtoken');
 const express = require('express');
 const router = express.Router();
 const async = require('async');
-const secret = require('../config/secret.js')
+const secret = require('../config/secret.js');
 
 const middleware = (req, res, next)=>{ //이함수는 클라이언트에서 로그인 하고나서
   // 발생하는 모든 request에 대해서 실행되는 함수
   //예를들어 logout.js 들어가보면 router.get 함수 호출 이전에 호출된다.
-
+var tasks=[
 //클라이언트의 요청에 대해서 /logout 으로 클라이언트의 요청이 들어온다고 가정
   function (callback){
     const token = req.headers['token'] || req.query.token; //헤더에 포함되어있는 토큰을 검증해야한다.
