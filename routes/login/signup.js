@@ -28,7 +28,7 @@ const upload = multer({
   여러 개의 파일을업로드-> array 사용, 두 번째 인자로 파일의 갯수 명시, req.files[i].location으로 링크 받아옴
   하나의 파일 -> single, req.file.location으로 파일 링크 받아옴
 */
-router.post('/',upload.single('image'), function(req, res, next) {
+router.post('/', upload.single('image'), function(req, res, next) {
 // router.post('/', function(req, res, next) {
   let taskArray = [
     (callback) => {
@@ -61,8 +61,8 @@ router.post('/',upload.single('image'), function(req, res, next) {
 
     (connection, buffer, callback) => {
       let insertquery = "insert into user(id,nickname,imgLink,password) values (?,?,?,?);";
-      connection.query(insertquery,[req.get('id'), req.body.nickname,req.file.location, req.get('password')],(err,rows) =>{
-      // connection.query(insertquery,[req.get('id'), req.body.nickname,req.body.imgLink, req.get('password')],(err,rows) =>{
+      connection.query(insertquery,[req.get('id'),req.body.nickname,req.file.location, req.get('password')],(err,rows) =>{
+      // connection.query(insertquery,[req.get('id'),req.body.nickname,req.body.imgLink,req.get('password')],(err,rows) =>{
         if(err){
           res.status(501).send({
             stat:'not available'
@@ -81,7 +81,7 @@ router.post('/',upload.single('image'), function(req, res, next) {
         data:{
           "id": req.get('id'),
           "nickname" : req.body.nickname,
-          "profileImg": [req.file.location] //파일 링크
+          "imgLink": [req.file.location] //파일 링크
         }
       });
       connection.release();

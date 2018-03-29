@@ -5,22 +5,6 @@ var math = require('mathjs');
 
 //callback함수
 const async = require('async');
-//파일 업로드용 미들웨어(S3에 업로드)
-// const multer = require('multer');
-// const multerS3 = require('multer-s3');
-// const aws = require('aws-sdk');
-// aws.config.loadFromPath('./config/aws_config.json');
-// const s3 = new aws.S3();
-// const upload = multer({
-//   storage: multerS3({
-//     s3 : s3,
-//     bucket: 'uniquename1234', //버킷 설정
-//     acl: 'public-read', //권한 설정
-//     key: function(req, file, cb) { //업로드할 파일 이름 설정
-//       cb(null, Date.now() + '.' + file.originalname.split('.').pop());//저장되는 이름 설정
-//     }
-//   })
-// });
 
 
 //랜덤 함수
@@ -30,10 +14,6 @@ const async = require('async');
 
 /*날짜별 미션과 후기*/
 
-/*파일 업로드
-  여러 개의 파일을업로드-> array 사용, 두 번째 인자로 파일의 갯수 명시, req.files[i].location으로 링크 받아옴
-  하나의 파일 -> single, req.file.location으로 파일 링크 받아옴
-*/
 router.post('/', function(req, res, next) {
   let taskArray = [
     (callback) => {
