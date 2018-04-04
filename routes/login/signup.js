@@ -46,23 +46,9 @@ router.post('/', upload.single('image'), function(req, res, next) {
     },
 
     (connection, callback) => {
-      crypto.randomBytes(32, function(err, buffer){
-        if(err){
-          res.status(500).send({
-            stat:'fail'
-          });
-          connection.release();
-          callback("error"+err, null);
-        }else{
-            callback(null, connection, buffer);
-        }
-      });
-    },
-
-    (connection, buffer, callback) => {
       let insertquery = "insert into user(id,nickname,imgLink,password) values (?,?,?,?);";
-      connection.query(insertquery,[req.get('id'),req.body.nickname,req.file.location, req.get('password')],(err,rows) =>{
-      // connection.query(insertquery,[req.get('id'),req.body.nickname,req.body.imgLink,req.get('password')],(err,rows) =>{
+      // connection.query(insertquery,[req.get('id'),req.body.nickname,req.file.location, req.get('password')],(err,rows) =>{
+      connection.query(insertquery,[req.get('id'),req.body.nickname,req.body.imgLink,req.get('password')],(err,rows) =>{
         if(err){
           res.status(501).send({
             stat:'not available'
@@ -70,19 +56,14 @@ router.post('/', upload.single('image'), function(req, res, next) {
           connection.release();
           callback("errer"+err, null);
         }else{
-          callback(null, connection, buffer, rows);
+          callback(null, connection, rows);
         }
       });
     },
 
-    (connection, buffer, rows, callback) => {
+    (connection, rows, callback) => {
       res.status(201).send({
-        stat:"success",
-        data:{
-          "id": req.get('id'),
-          "nickname" : req.body.nickname,
-          "imgLink": [req.file.location] //파일 링크
-        }
+        stat:"success"
       });
       connection.release();
       callback(null, null);
