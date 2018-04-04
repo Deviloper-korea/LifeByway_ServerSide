@@ -46,22 +46,52 @@ router.post('/', upload.single('image'), function(req, res, next) {
     },
 
     (connection, callback) => {
+      let selectquery = "select * from user where id = ?;";
+      connection.query(selectquery,[req.get('id')],(err,id) =>{
+        if(id[0] != null){
+          res.status(501).send({
+            stat:'duplicated ID'
+          });
+          connection.release();
+          callback("errer"+err, null);
+        }else{
+          callback(null, connection, id);
+        }
+      });
+    },
+
+    (connection, id, callback) => {
+      let selectquery = "select * from user where nickname = ?;";
+      connection.query(selectquery,[req.body.nickname],(err,nickname) =>{
+        if(nickname[0] != null){
+          res.status(502).send({
+            stat:'duplicated nickname'
+          });
+          connection.release();
+          callback("errer"+err, null);
+        }else{
+          callback(null, connection, id, nickname);
+        }
+      });
+    },
+
+    (connection, id, nickname, callback) => {
       let insertquery = "insert into user(id,nickname,imgLink,password) values (?,?,?,?);";
       // connection.query(insertquery,[req.get('id'),req.body.nickname,req.file.location, req.get('password')],(err,rows) =>{
       connection.query(insertquery,[req.get('id'),req.body.nickname,req.body.imgLink,req.get('password')],(err,rows) =>{
         if(err){
-          res.status(501).send({
+          res.status(503).send({
             stat:'not available'
           });
           connection.release();
           callback("errer"+err, null);
         }else{
-          callback(null, connection, rows);
+          callback(null, connection, rows, id, nickname);
         }
       });
     },
 
-    (connection, rows, callback) => {
+    (connection, id, nickname, rows, callback) => {
       res.status(201).send({
         stat:"success"
       });
