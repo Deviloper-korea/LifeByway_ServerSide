@@ -76,9 +76,9 @@ router.post('/', upload.single('image'), function(req, res, next) {
     },
 
     (connection, id, nickname, callback) => {
-      let insertquery = "insert into user(id,nickname,imgLink,password) values (?,?,?,?);";
+      let insertquery = "insert into user(id,nickname,imgLink,password,email) values (?,?,?,?,?);";
       // connection.query(insertquery,[req.get('id'),req.body.nickname,req.file.location, req.get('password')],(err,rows) =>{
-      connection.query(insertquery,[req.get('id'),req.body.nickname,req.body.imgLink,req.get('password')],(err,rows) =>{
+      connection.query(insertquery,[req.get('id'),req.body.nickname,req.body.imgLink,req.get('password'),req.body.email],(err,rows) =>{
         if(err){
           res.status(503).send({
             stat:'not available'
