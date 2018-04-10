@@ -11,14 +11,7 @@ const middle = require('../../middlewares/auth.js');
 router.use('/', middle);
 
 router.get('/', (req, res) =>{
-
-  if(req.stat ==='invalid')
-  {
-    res.send({
-      stat : 'logout'
-    });
-  }
-
+ 
 });
 
 module.exports = router;

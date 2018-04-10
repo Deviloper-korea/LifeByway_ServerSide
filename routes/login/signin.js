@@ -27,7 +27,7 @@ router.post('/', function(req, res, next){
         console.log('connection success');
             let query = "select * from user where id = ? and password = ?";
 
-            connection.query(query, [req.get('id'), req.get('password')], (err, rows) =>{
+            connection.query(query, [req.body.id, req.get('password')], (err, rows) =>{
 
               if(err){
                 console.log('select fail');
@@ -38,7 +38,17 @@ router.post('/', function(req, res, next){
                 );
                   connection.release();
               }
+              else if(!rows.length){
+
+                res.status(501).send(
+                  {
+                    stat: 'no data'
+                  }
+                );
+                  connection.release();
+              }
               else {
+
 
                 var token = jwt.sign(
                              {
@@ -54,11 +64,11 @@ router.post('/', function(req, res, next){
                                subject :'userinfo'
                              });
 
-                            res.send(
-
-
-                               token
-
+                            res.status(201).send(
+                              {
+                                stat:"success",
+                                data: token
+                              }
                             );
                             connection.release();
               }
