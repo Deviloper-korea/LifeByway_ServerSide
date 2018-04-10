@@ -30,6 +30,9 @@ var tasks=[
       // 회원정보가 포함되어있고 검증에 성공하게되면 decoded에 회원정보가 저장된다.
       if(err)
       {
+        res.send({
+           stat : 'invalid'
+        });
 
         return callback(err);
       }
@@ -45,8 +48,7 @@ var tasks=[
     if(err)
     {
       console.log('err');
-      req.stat = 'invalid'; //검증에 실패하면 req.stat invalid를 저장하고,
-      next(); // /logout으로 요청이 들어왔다고 가정했을때, next()를 호출하면 아래 코드가 실행됨
+
     }
     else { //에러가 나지 않으면
       console.log('done');
@@ -62,11 +64,6 @@ var tasks=[
         //  });
        //}
        //});
-
-
-
-
-
     }
   });
 };
