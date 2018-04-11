@@ -3,12 +3,12 @@ var router = express.Router();
 
 var fromcal = require('./fromcal');
 var getreview = require('./getreview');
-var stamp = require('./stamp');
+var mainpage = require('./mainpage');
 
 
 
 router.use('/fromcal', fromcal);
 router.use('/getreview', getreview);
-router.us('/stamp', stamp);
+router.use('/mainpage', mainpage);
 
 module.exports = router;
