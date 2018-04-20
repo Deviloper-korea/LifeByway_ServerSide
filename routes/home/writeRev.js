@@ -41,10 +41,59 @@ router.post('/', function(req, res, next) {
     },
 
     (connection, subject, callback) => {
+
+      let selectquery = 'select * from reviewcount where subject_id = ?';
+      connection.query(selectquery, [subject.subject_id], function(err, rows){
+
+        if(err)
+        {
+          res.status(502).send({
+            stat: 'update query err'
+          })
+          connection.release();
+          callback(err, null);
+        }
+        else if(!rows.length)
+        {
+          console.log(subject);
+          let insertquery = 'insert into reviewcount(count, subject_id) values (? , ?)';
+          connection.query(insertquery, [1, subject[0].subject_id], function(err, rows){
+            if(err)
+            {
+              res.status(502).send({
+                stat: 'insert query err'
+              })
+              connection.release();
+              callback(err, null);
+            }
+            else {
+              callback(null, connection, subject);
+            }
+          })
+        }
+        else{
+          let updatequery = 'update reviewcount set count = count+1 where subject_id = ?';
+          connection.query(updatequery, [], function(err, rows){
+            if(err)
+            {
+              res.status(502).send({
+                stat: 'update query err'
+              })
+              connection.release();
+              callback(err, null);
+            }else{
+              callback(null, connection, subject);
+            }
+          })
+        }
+      })
+    },
+
+    (connection, subject, callback) => {
       let insertquery = "insert into review(comment, date, subject_id, user_id) values(?, ?, ?, ?);";
       // let id = req.decoded.user_id;
       console.log(req.decoded.user_id);
-      connection.query(insertquery ,[req.body.comment, req.body.today_date, subject[0].subject_id, req.decoded.user_id],(err, review) =>{
+      connection.query(insertquery, [req.body.comment, req.body.today_date, subject[0].subject_id, req.decoded.user_id],(err, review) =>{
         if(err){
           res.status(502).send({
             stat:'not available / review'
