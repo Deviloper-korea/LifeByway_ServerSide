@@ -7,7 +7,6 @@ const async = require('async');
 const middle = require('../../middlewares/auth.js');
 router.use('/', middle);
 
-
 /*회원정보 수정 페이지 - 사진, 닉네임, 레벨 불러오기*/
 router.post('/', function(req, res, next) {
   let taskArray = [
